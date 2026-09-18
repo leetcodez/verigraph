@@ -91,30 +91,49 @@ document.addEventListener("DOMContentLoaded", () => {
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
         let buffer = "";
-        let streamedText = "";
 
-        while (true) {
-          const { value, done } = await reader.read();
-          if (done) break;
-
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split("\n\n");
-          buffer = lines.pop(); // keep last incomplete chunk
-
-          for (const block of lines) {
+        const processBlocks = (blocks) => {
+          for (const block of blocks) {
             if (!block.trim()) continue;
             let eventType = "message";
             let dataStr = "";
 
             for (const line of block.split("\n")) {
-              if (line.startsWith("event: ")) eventType = line.substring(7).trim();
-              if (line.startsWith("data: ")) dataStr = line.substring(6).trim();
+              const trimmed = line.trim();
+              if (trimmed.startsWith("event:")) {
+                eventType = trimmed.substring(6).trim();
+              } else if (trimmed.startsWith("data:")) {
+                dataStr = trimmed.substring(5).trim();
+              }
             }
 
             if (eventType && dataStr) {
-              handleSseEvent(eventType, JSON.parse(dataStr));
+              try {
+                const parsed = JSON.parse(dataStr);
+                handleSseEvent(eventType, parsed);
+              } catch (e) {
+                console.warn("Failed to parse SSE JSON:", dataStr, e);
+              }
             }
           }
+        };
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) {
+            if (buffer.trim()) {
+              processBlocks([buffer]);
+            }
+            break;
+          }
+
+          buffer += decoder.decode(value, { stream: true });
+          // Normalize Windows/HTTP CRLF to standard LF
+          buffer = buffer.replace(/\r\n/g, "\n");
+          const blocks = buffer.split("\n\n");
+          buffer = blocks.pop() || ""; // keep incomplete tail
+
+          processBlocks(blocks);
         }
       } catch (err) {
         responseOutput.innerHTML = `<span style="color: #ef4444;">Query failed: ${err.message}</span>`;
@@ -169,6 +188,8 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
       });
       claimsSummary.innerHTML = html;
+    } else if (event === "done") {
+      strategyBadge.innerText = `Verified (${data.latency_ms}ms)`;
     }
   }
 

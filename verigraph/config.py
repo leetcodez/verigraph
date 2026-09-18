@@ -45,6 +45,7 @@ class Settings(BaseSettings):
     min_claim_words: int = 4
 
     # Optional Frontier LLM / External API keys
+    llm_provider: str = "local"  # local, openai, or ollama
     openai_api_key: Optional[str] = None
     openai_base_url: Optional[str] = None
     openai_model: str = "gpt-4o-mini"

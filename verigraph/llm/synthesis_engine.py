@@ -128,8 +128,8 @@ class SynthesisEngine(BaseSynthesizer):
         retrieved_contexts: List[RetrievalCandidate],
         subgraph: Optional[Subgraph] = None,
     ) -> str:
-        # Check if remote LLM configured
-        if self.api_key:
+        # Check if remote LLM explicitly configured
+        if settings.llm_provider in ["openai", "ollama"] and self.api_key:
             try:
                 prompt = self._build_context_prompt(query, retrieved_contexts, subgraph)
                 payload = {
@@ -144,7 +144,7 @@ class SynthesisEngine(BaseSynthesizer):
                     "Authorization": f"Bearer {self.api_key}",
                     "Content-Type": "application/json",
                 }
-                with httpx.Client(timeout=30.0) as client:
+                with httpx.Client(timeout=10.0) as client:
                     resp = client.post(f"{self.base_url}/chat/completions", json=payload, headers=headers)
                     if resp.status_code == 200:
                         data = resp.json()
@@ -161,8 +161,8 @@ class SynthesisEngine(BaseSynthesizer):
         retrieved_contexts: List[RetrievalCandidate],
         subgraph: Optional[Subgraph] = None,
     ) -> AsyncGenerator[str, None]:
-        # If remote API with streaming
-        if self.api_key:
+        # If remote API with streaming explicitly configured
+        if settings.llm_provider in ["openai", "ollama"] and self.api_key:
             prompt = self._build_context_prompt(query, retrieved_contexts, subgraph)
             payload = {
                 "model": self.model_name,
@@ -178,7 +178,7 @@ class SynthesisEngine(BaseSynthesizer):
                 "Content-Type": "application/json",
             }
             try:
-                async with httpx.AsyncClient(timeout=40.0) as client:
+                async with httpx.AsyncClient(timeout=15.0) as client:
                     async with client.stream(
                         "POST", f"{self.base_url}/chat/completions", json=payload, headers=headers
                     ) as response:
