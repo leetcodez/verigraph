@@ -15,12 +15,12 @@ class GraphVisualizer {
     this.panStart = { x: 0, y: 0 };
 
     this.typeColors = {
-      ALGORITHM: "#06b6d4",
-      PROTOCOL: "#8b5cf6",
-      SYSTEM: "#3b82f6",
-      VULNERABILITY: "#f43f5e",
-      ROLE: "#f59e0b",
-      CONCEPT: "#10b981",
+      ALGORITHM: "#8f4226",  // Terracotta
+      PROTOCOL: "#5e4231",   // Walnut / Espresso
+      SYSTEM: "#b5683b",     // Cognac / Sienna
+      VULNERABILITY: "#9e3633", // Brick / Clay
+      ROLE: "#a87834",       // Amber Ochre
+      CONCEPT: "#316348",    // Forest Sage
     };
 
     this.initEvents();
@@ -195,10 +195,10 @@ class GraphVisualizer {
     let html = `
       <defs>
         <marker id="arrow" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569" />
+          <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#887466" />
         </marker>
         <marker id="arrow-active" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M 0 1 L 10 5 L 0 9 z" fill="#06b6d4" />
+          <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#8f4226" />
         </marker>
       </defs>
       <g class="graph-root" transform="translate(${this.transform.x}, ${this.transform.y}) scale(${this.transform.scale})">
@@ -212,9 +212,10 @@ class GraphVisualizer {
 
       html += `
         <line x1="${e.source.x}" y1="${e.source.y}" x2="${e.target.x}" y2="${e.target.y}"
-              stroke="#334155" stroke-width="1.8" marker-end="url(#arrow)" />
-        <text x="${midX}" y="${midY}" fill="#64748b" font-size="9" font-family="'JetBrains Mono', monospace"
-              text-anchor="middle" dy="-3">${e.relation}</text>
+              stroke="#c7b6a5" stroke-width="1.6" stroke-opacity="0.85" marker-end="url(#arrow)" />
+        <rect x="${midX - 35}" y="${midY - 10}" width="70" height="14" rx="3" fill="#faf7f2" fill-opacity="0.85" />
+        <text x="${midX}" y="${midY}" fill="#5a493e" font-size="8.5" font-family="'JetBrains Mono', monospace"
+              font-weight="600" text-anchor="middle" dy="0.5">${e.relation}</text>
       `;
     }
     html += "</g>";
@@ -222,15 +223,16 @@ class GraphVisualizer {
     // Nodes
     html += '<g class="nodes-layer">';
     for (const n of this.nodes) {
-      const color = this.typeColors[n.type] || "#10b981";
+      const color = this.typeColors[n.type] || "#316348";
       const radius = n.isSeed ? 16 : 12;
-      const stroke = n.isSeed ? "#38bdf8" : "rgba(255,255,255,0.3)";
-      const strokeWidth = n.isSeed ? 3 : 1.5;
+      const stroke = n.isSeed ? "#241a15" : "#ffffff";
+      const strokeWidth = n.isSeed ? 3 : 2;
 
       html += `
         <g class="node-group" data-id="${n.id}" transform="translate(${n.x}, ${n.y})" style="cursor: pointer;">
+          <circle r="${radius + 2}" fill="rgba(45, 30, 20, 0.08)" />
           <circle r="${radius}" fill="${color}" stroke="${stroke}" stroke-width="${strokeWidth}" />
-          <text y="${radius + 14}" fill="#f8fafc" font-size="11" font-weight="600"
+          <text y="${radius + 15}" fill="#241a15" font-size="11" font-weight="650"
                 text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif">${n.name}</text>
         </g>
       `;

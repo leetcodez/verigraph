@@ -253,7 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .slice(0, 8)
       .map(
         (n) => `
-        <span style="display:inline-block; margin: 3px; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; background: rgba(6,182,212,0.15); border: 1px solid #06b6d4; color: #38bdf8;">
+        <span style="display:inline-block; margin: 3px; padding: 4px 10px; border-radius: 6px; font-size: 0.76rem; background: #ffffff; border: 1px solid #dcd0c0; color: #8f4226; font-weight: 600; box-shadow: 0 1px 3px rgba(45,30,20,0.04);">
           ${n.name}
         </span>
       `
@@ -264,8 +264,8 @@ document.addEventListener("DOMContentLoaded", () => {
       .slice(0, 4)
       .map(
         (e) => `
-        <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 4px;">
-          • ${e.source} ➔ <span style="color:#06b6d4;">[${e.relation}]</span> ➔ ${e.target}
+        <div style="font-size: 0.78rem; color: #5a493e; margin-top: 5px; font-family: 'JetBrains Mono', monospace;">
+          • ${e.source} ➔ <span style="color:#8f4226; font-weight: 700;">[${e.relation}]</span> ➔ ${e.target}
         </div>
       `
       )
