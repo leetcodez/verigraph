@@ -8,19 +8,17 @@ echo "================================================================="
 echo "   VeriGraph: Enterprise Agentic GraphRAG & Verifiable Engine    "
 echo "================================================================="
 
-# Activate virtualenv if present
-if [ -d ".venv" ]; then
-    echo "[*] Activating virtual environment (.venv)..."
+# Create and activate virtual environment if not present
+if [ ! -d ".venv" ]; then
+    echo "[*] Setting up virtual environment (.venv)..."
+    python3 -m venv .venv
+    source .venv/bin/activate
+    echo "[*] Installing dependencies from requirements.txt..."
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
+else
     source .venv/bin/activate
 fi
 
-export PYTHONPATH=".:$PYTHONPATH"
-PORT="${PORT:-8080}"
-HOST="${HOST:-0.0.0.0}"
-
-echo "[*] Initializing VeriGraph Server on http://${HOST}:${PORT}"
-echo "[*] Interactive Web Dashboard:  http://localhost:${PORT}/"
-echo "[*] OpenAPI Swagger Docs:      http://localhost:${PORT}/docs"
-echo "================================================================="
-
-exec uvicorn verigraph.api.app:app --host "$HOST" --port "$PORT" --reload
+# Launch via universal cross-platform runner
+python run.py "$@"

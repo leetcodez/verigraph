@@ -117,27 +117,73 @@ Benchmarked across curated multi-hop systems queries comparing **Naive Vector RA
 - Python 3.12+ (or Docker)
 - Git
 
-### Installation & Execution (Local)
-```bash
-# 1. Clone repository and navigate to folder
-cd /home/utsav/NEWFOLDER
+### Installation & Execution
 
-# 2. Run the automated launcher
+#### Option 1: Universal 1-Command Launcher (Recommended)
+```bash
+# 1. Clone the repository
+git clone https://github.com/leetcodez/verigraph.git
+cd verigraph
+
+# 2. Run based on your Operating System:
+# On Windows (Command Prompt or PowerShell):
+run.bat
+# or:
+python run.py
+
+# On Linux / macOS / WSL:
+chmod +x run.sh
 ./run.sh
+# or:
+python3 run.py
 ```
+
+The launcher will:
+1. Automatically create a Python virtual environment (`.venv`) if one doesn't exist.
+2. Install all required dependencies from `requirements.txt`.
+3. Check port availability (defaults to `8080`, with automatic fallback if busy).
+4. Launch the server and provide direct dashboard URLs.
 
 Open your browser at:
 - **Interactive Web Dashboard**: [http://localhost:8080](http://localhost:8080)
 - **OpenAPI Interactive Documentation**: [http://localhost:8080/docs](http://localhost:8080/docs)
 
-### Run via Docker
+> [!TIP]
+> **Seeing the Previous UI or Stale Styles?**
+> If you previously visited `localhost:8080`, your browser may have cached the older CSS. Perform a **Hard Refresh** in your browser:
+> - **Windows / Linux**: `Ctrl + Shift + R` or `Ctrl + F5`
+> - **macOS**: `Cmd + Shift + R`
+
+---
+
+#### Option 2: Manual Setup
+```bash
+python3 -m venv .venv
+
+# Activate environment:
+# On Windows:
+.venv\Scripts\activate
+# On Linux/macOS:
+source .venv/bin/activate
+
+pip install -r requirements.txt
+python run.py
+```
+
+---
+
+#### Option 3: Docker
 ```bash
 docker compose up --build
 ```
 
+---
+
 ### Run Test Suite & Benchmark Suite
 ```bash
 # Run 15 unit and integration tests
+pytest
+# or:
 ./test_runner.sh
 ```
 
@@ -166,7 +212,9 @@ docker compose up --build
 ├── tests/                     # Comprehensive pytest unit and integration test suite
 ├── Dockerfile                 # Container image specification
 ├── docker-compose.yml         # Container orchestration manifest
-├── run.sh                     # Server startup script
+├── run.py                     # Universal cross-platform launcher (Windows, Mac, Linux)
+├── run.bat                    # Windows 1-click batch launcher
+├── run.sh                     # Linux / macOS launcher
 └── test_runner.sh             # Automated test and benchmark execution script
 ```
 

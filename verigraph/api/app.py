@@ -72,19 +72,44 @@ def create_app() -> FastAPI:
             "graph_edges": app.state.pipeline.graph_engine.graph.number_of_edges(),
         }
 
+    # Anti-caching middleware for frontend assets to ensure instant UI updates
+    @app.middleware("http")
+    async def add_cache_control_headers(request, call_next):
+        response = await call_next(request)
+        if request.url.path.startswith(("/static", "/css", "/js")) or request.url.path in ("/", "/index.html"):
+            response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+            response.headers["Pragma"] = "no-cache"
+            response.headers["Expires"] = "0"
+        return response
+
     # Mount frontend static directory
     frontend_dir = settings.base_dir / "frontend"
     if frontend_dir.exists():
         app.mount("/static", StaticFiles(directory=str(frontend_dir)), name="static")
+        css_dir = frontend_dir / "css"
+        js_dir = frontend_dir / "js"
+        if css_dir.exists():
+            app.mount("/css", StaticFiles(directory=str(css_dir)), name="css")
+        if js_dir.exists():
+            app.mount("/js", StaticFiles(directory=str(js_dir)), name="js")
 
-        @app.get("/")
+        @app.api_route("/", methods=["GET", "HEAD"])
         async def serve_index():
             index_path = frontend_dir / "index.html"
             if index_path.exists():
-                return FileResponse(str(index_path))
+                resp = FileResponse(str(index_path))
+                resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+                resp.headers["Pragma"] = "no-cache"
+                resp.headers["Expires"] = "0"
+                return resp
             return {"message": "VeriGraph API is active. Frontend index.html not found."}
 
     return app
 
 
 app = create_app()
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("verigraph.api.app:app", host="0.0.0.0", port=8080, reload=True)
