@@ -1,0 +1,37 @@
+[
+  {
+    "id": "q1",
+    "query": "How does Raft prevent split-brain during network partitions?",
+    "type": "multi_hop_causality",
+    "ground_truth_entities": ["raft", "split_brain", "majority_quorum", "leader"],
+    "ground_truth_claim": "Raft prevents split-brain by requiring a majority quorum for leader election and log commits."
+  },
+  {
+    "id": "q2",
+    "query": "What role does mTLS play in a Zero Trust microservices architecture?",
+    "type": "relational_requirement",
+    "ground_truth_entities": ["mtls", "zero_trust", "jwt", "api_gateway"],
+    "ground_truth_claim": "mTLS provides mutual cryptographic authentication and transport encryption between microservices under Zero Trust."
+  },
+  {
+    "id": "q3",
+    "query": "Compare Paxos and Raft consensus algorithms.",
+    "type": "comparison",
+    "ground_truth_entities": ["paxos", "raft", "leader", "multi_paxos"],
+    "ground_truth_claim": "Raft is designed to be more understandable than Paxos with stronger leader-driven log replication."
+  },
+  {
+    "id": "q4",
+    "query": "How does Reciprocal Rank Fusion combine vector search with BM25?",
+    "type": "algorithm_mechanism",
+    "ground_truth_entities": ["rrf", "bm25", "vector_search", "k_constant"],
+    "ground_truth_claim": "RRF sums the reciprocal of the ranking positions from both dense and sparse channels scaled by constant k."
+  },
+  {
+    "id": "q5",
+    "query": "Why does naive vector search fail on multi-hop questions?",
+    "type": "limitation_analysis",
+    "ground_truth_entities": ["vector_search", "multi_hop", "knowledge_graph", "chunking"],
+    "ground_truth_claim": "Naive vector search relies on local lexical-semantic similarity and cannot follow relational graph paths across documents."
+  }
+]

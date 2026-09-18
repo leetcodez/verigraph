@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  verigraph:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: verigraph-engine
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - HOST=0.0.0.0
+      - EMBEDDING_MODEL=local-deterministic
+      # Optional: set frontier LLM keys
+      # - OPENAI_API_KEY=your-api-key
+      # - OPENAI_MODEL=gpt-4o-mini
+    volumes:
+      - ./data:/app/data
+      - ./sample_data:/app/sample_data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

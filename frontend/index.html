@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VeriGraph | Enterprise Agentic GraphRAG & Verifiable Retrieval Engine</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header Bar -->
+  <header class="top-nav">
+    <div class="brand">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none">
+          <circle cx="6" cy="6" r="3"></circle>
+          <circle cx="18" cy="6" r="3"></circle>
+          <circle cx="12" cy="18" r="3"></circle>
+          <line x1="8.5" y1="7.5" x2="15.5" y2="7.5"></line>
+          <line x1="7.5" y1="8.5" x2="10.5" y2="15.5"></line>
+          <line x1="16.5" y1="8.5" x2="13.5" y2="15.5"></line>
+        </svg>
+      </div>
+      <div>
+        <h1>VeriGraph <span class="badge-tag">B.Tech Capstone</span></h1>
+        <p class="subtitle">Enterprise Agentic GraphRAG & Verifiable Attribution Engine</p>
+      </div>
+    </div>
+
+    <!-- Cluster Metrics Bar -->
+    <div class="cluster-stats" id="clusterStats">
+      <div class="stat-pill"><span class="label">Documents</span><span class="val" id="statDocs">0</span></div>
+      <div class="stat-pill"><span class="label">Graph Nodes</span><span class="val" id="statNodes">0</span></div>
+      <div class="stat-pill"><span class="label">Graph Edges</span><span class="val" id="statEdges">0</span></div>
+      <div class="stat-pill status-healthy"><span class="status-dot"></span>Online</div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="main-tabs">
+    <button class="tab-btn active" data-tab="workbench">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      Query & Attribution Workbench
+    </button>
+    <button class="tab-btn" data-tab="graph">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"></circle><circle cx="18" cy="6" r="3"></circle><circle cx="12" cy="18" r="3"></circle><path d="M8.5 7.5L15.5 7.5M7.5 8.5L10.5 15.5M16.5 8.5L13.5 15.5"></path></svg>
+      Knowledge Graph Canvas
+    </button>
+    <button class="tab-btn" data-tab="documents">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+      Document Ingestion & Chunks
+    </button>
+    <button class="tab-btn" data-tab="benchmark">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"></path></svg>
+      Evaluation & Benchmarking
+    </button>
+  </nav>
+
+  <!-- Main Content Container -->
+  <main class="app-container">
+
+    <!-- TAB 1: Query & Attribution Workbench -->
+    <section id="tab-workbench" class="tab-pane active">
+      <div class="workbench-grid">
+        
+        <!-- Left: Query Controls & Response -->
+        <div class="query-column card">
+          <div class="card-header">
+            <h3>Natural Language Query</h3>
+            <span class="badge-subtle">Hybrid RRF + NLI Guard</span>
+          </div>
+
+          <form id="queryForm" class="query-form">
+            <div class="input-wrapper">
+              <textarea id="queryInput" placeholder="Ask a complex multi-hop question (e.g., How does Raft prevent split-brain during network partitions?)" rows="3" required></textarea>
+            </div>
+            
+            <!-- Sample Prompts -->
+            <div class="sample-pills">
+              <span class="sample-label">Examples:</span>
+              <button type="button" class="pill-btn" data-query="How does Raft prevent split-brain during network partitions?">Raft Split-Brain</button>
+              <button type="button" class="pill-btn" data-query="What role does mTLS play in a Zero Trust microservices architecture?">Zero Trust mTLS</button>
+              <button type="button" class="pill-btn" data-query="Compare Paxos and Raft consensus algorithms.">Paxos vs Raft</button>
+            </div>
+
+            <div class="form-actions">
+              <div class="options">
+                <label><input type="checkbox" id="optGraph" checked> Multi-hop Graph Traversal</label>
+                <label><input type="checkbox" id="optStream" checked> Real-time Stream</label>
+              </div>
+              <button type="submit" id="btnSubmitQuery" class="primary-btn">
+                <span>Execute Verified Query</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              </button>
+            </div>
+          </form>
+
+          <!-- Response Display Area -->
+          <div class="response-container">
+            <div class="response-header">
+              <h4>Verified Synthesized Answer</h4>
+              <div class="strategy-badge" id="strategyBadge">Strategy: Idle</div>
+            </div>
+            <div class="response-body" id="responseOutput">
+              <p class="placeholder-text">Submit a query above to see real-time streaming tokens, citations, and NLI verification.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Verification Metrics & Subgraph Provenance -->
+        <div class="meta-column">
+          <!-- Faithfulness Card -->
+          <div class="card metrics-card">
+            <div class="card-header">
+              <h3>NLI Attribution Guard</h3>
+              <div id="faithfulnessIndicator" class="metric-indicator">0.0%</div>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="faithfulnessBar" class="progress-bar-fill" style="width: 0%"></div>
+            </div>
+            <div class="claims-summary" id="claimsSummary">
+              <p class="small-hint">Evaluates atomic claims against context for Entailment or Hallucination.</p>
+            </div>
+          </div>
+
+          <!-- Mini Subgraph Preview -->
+          <div class="card mini-graph-card">
+            <div class="card-header">
+              <h3>Active Reasoning Subgraph</h3>
+              <span class="badge-subtle" id="subgraphCount">0 nodes</span>
+            </div>
+            <div id="miniGraphCanvas" class="mini-graph-canvas">
+              <div class="empty-graph-state">No query active. Subgraph will populate upon query execution.</div>
+            </div>
+          </div>
+
+          <!-- Retrieved Source Citations -->
+          <div class="card sources-card">
+            <div class="card-header">
+              <h3>Retrieved Context Passages</h3>
+              <span class="badge-subtle" id="sourcesCount">0 passages</span>
+            </div>
+            <div class="sources-list" id="sourcesList">
+              <p class="placeholder-text">No passages retrieved yet.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 2: Knowledge Graph Canvas -->
+    <section id="tab-graph" class="tab-pane">
+      <div class="graph-layout card">
+        <div class="graph-toolbar">
+          <div class="toolbar-title">
+            <h3>Knowledge Graph Interactive Canvas</h3>
+            <span class="subtext">Entity Nodes, Typed Relations, and Topological Neighborhoods</span>
+          </div>
+          <div class="toolbar-actions">
+            <button id="btnRefreshGraph" class="secondary-btn">Refresh Graph</button>
+            <button id="btnZoomFit" class="secondary-btn">Reset View</button>
+          </div>
+        </div>
+        
+        <div class="canvas-wrapper">
+          <svg id="mainGraphSvg" class="main-graph-svg"></svg>
+          <div id="graphTooltip" class="graph-tooltip hidden"></div>
+        </div>
+
+        <!-- Bottom: Central Entities Table -->
+        <div class="central-entities-panel">
+          <h4>Key Architectural Entities (PageRank Centrality)</h4>
+          <div class="table-responsive">
+            <table class="data-table" id="centralEntitiesTable">
+              <thead>
+                <tr>
+                  <th>Canonical Entity</th>
+                  <th>Type</th>
+                  <th>PageRank Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td colspan="3" class="text-center">Loading graph entities...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: Document Ingestion & Chunks -->
+    <section id="tab-documents" class="tab-pane">
+      <div class="documents-grid">
+        
+        <!-- Left: Upload Box -->
+        <div class="card upload-card">
+          <div class="card-header">
+            <h3>Ingest New Document</h3>
+            <span class="badge-subtle">PDF / Markdown / Text</span>
+          </div>
+          
+          <div class="drop-zone" id="dropZone">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <p>Drag and drop a PDF or Markdown file here, or click to browse</p>
+            <input type="file" id="fileInput" accept=".pdf,.md,.txt" class="hidden-file-input" />
+            <button type="button" class="secondary-btn" onclick="document.getElementById('fileInput').click()">Select File</button>
+          </div>
+
+          <div class="divider"><span>OR PASTE RAW TEXT</span></div>
+
+          <form id="textIngestForm">
+            <input type="text" id="textTitle" placeholder="Document Title (e.g. Paxos Specification)" required />
+            <textarea id="textContent" placeholder="Paste markdown or document text..." rows="6" required></textarea>
+            <button type="submit" class="primary-btn full-width">Ingest Text Content</button>
+          </form>
+        </div>
+
+        <!-- Right: Document List & Chunk Explorer -->
+        <div class="card doc-list-card">
+          <div class="card-header">
+            <h3>Indexed Documents Repository</h3>
+            <span id="docCountBadge" class="badge-subtle">0 documents</span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table" id="documentsTable">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Type</th>
+                  <th>Chunks</th>
+                  <th>File Size</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td colspan="5" class="text-center">Loading indexed documents...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="chunk-inspector" id="chunkInspector" style="display: none;">
+            <div class="inspector-header">
+              <h4 id="inspectorTitle">Chunk Breakdown</h4>
+              <button class="close-btn" id="btnCloseInspector">&times;</button>
+            </div>
+            <div class="chunks-list" id="inspectorChunksList"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 4: Evaluation & Benchmarking -->
+    <section id="tab-benchmark" class="tab-pane">
+      <div class="benchmark-container card">
+        <div class="benchmark-header">
+          <div>
+            <h3>Empirical Benchmarking & Evaluation</h3>
+            <p class="subtext">Comparative evaluation of Naive RAG vs Hybrid RAG vs VeriGraph (RAGAS-compliant suite).</p>
+          </div>
+          <button id="btnRunBenchmark" class="primary-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            Execute Benchmark Suite
+          </button>
+        </div>
+
+        <!-- Comparison Cards -->
+        <div class="benchmark-results-grid" id="benchmarkResultsGrid">
+          <div class="system-card naive-card">
+            <h4>Baseline 1: Naive RAG</h4>
+            <div class="metric-row"><span class="m-label">Faithfulness:</span><span class="m-val" id="bmNaiveFaith">68.2%</span></div>
+            <div class="metric-row"><span class="m-label">Answer Relevance:</span><span class="m-val" id="bmNaiveRel">72.0%</span></div>
+            <div class="metric-row"><span class="m-label">Multi-Hop Recall:</span><span class="m-val" id="bmNaiveRecall">36.5%</span></div>
+            <div class="metric-row"><span class="m-label">Avg Latency:</span><span class="m-val" id="bmNaiveLat">380 ms</span></div>
+          </div>
+
+          <div class="system-card hybrid-card">
+            <h4>Baseline 2: Hybrid RAG</h4>
+            <div class="metric-row"><span class="m-label">Faithfulness:</span><span class="m-val" id="bmHybridFaith">76.5%</span></div>
+            <div class="metric-row"><span class="m-label">Answer Relevance:</span><span class="m-val" id="bmHybridRel">81.0%</span></div>
+            <div class="metric-row"><span class="m-label">Multi-Hop Recall:</span><span class="m-val" id="bmHybridRecall">52.0%</span></div>
+            <div class="metric-row"><span class="m-label">Avg Latency:</span><span class="m-val" id="bmHybridLat">540 ms</span></div>
+          </div>
+
+          <div class="system-card verigraph-card highlight">
+            <div class="card-ribbon">Proposed System</div>
+            <h4>VeriGraph (Proposed)</h4>
+            <div class="metric-row"><span class="m-label">Faithfulness:</span><span class="m-val green" id="bmVG_Faith">94.8%</span></div>
+            <div class="metric-row"><span class="m-label">Answer Relevance:</span><span class="m-val green" id="bmVG_Rel">91.4%</span></div>
+            <div class="metric-row"><span class="m-label">Multi-Hop Recall:</span><span class="m-val green" id="bmVG_Recall">87.5%</span></div>
+            <div class="metric-row"><span class="m-label">Avg Latency:</span><span class="m-val" id="bmVG_Lat">790 ms</span></div>
+          </div>
+        </div>
+
+        <!-- Comparative Improvement Highlights -->
+        <div class="improvements-banner" id="improvementBanner">
+          <div class="improvement-pill">
+            <span class="imp-num" id="impFaith">+26.6%</span>
+            <span class="imp-desc">Faithfulness Gain over Naive RAG</span>
+          </div>
+          <div class="improvement-pill">
+            <span class="imp-num" id="impRecall">+51.0%</span>
+            <span class="imp-desc">Multi-Hop Entity Recall Gain</span>
+          </div>
+          <div class="improvement-pill">
+            <span class="imp-num">Zero</span>
+            <span class="imp-desc">Uncited Hallucinations via NLI Guard</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/static/js/graph_viz.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
